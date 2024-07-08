@@ -1,0 +1,40 @@
+{
+  "name": "open-money-era",
+  "sources": [
+    {
+      "dir": "src",
+      "subdirs": true
+    },
+    {
+      "dir": "api",
+      "subdirs": true
+    }
+  ],
+  "package-specs": [
+    {
+      "module": "esmodule",
+      "in-source": true
+    }
+  ],
+  "suffix": ".res.mjs",
+  "bs-dependencies": [
+    "@greenlabs/ppx-spice",
+    "@rescript/core",
+    "@rescript/react",
+    "@glennsl/rescript-fetch"
+  ],
+  "bsc-flags": [
+    "-open RescriptCore",
+    "-open Fetch",
+    "-open Promise"
+  ],
+  "ppx-flags": [
+    [
+      "@greenlabs/ppx-spice/ppx",
+      "-uncurried"
+    ]
+  ],
+  "jsx": {
+    "version": 4
+  }
+}
