@@ -21,7 +21,9 @@
     "@greenlabs/ppx-spice",
     "@rescript/core",
     "@rescript/react",
-    "@glennsl/rescript-fetch"
+    "@glennsl/rescript-fetch",
+    "@rescript/react",
+    "@rescriptbr/react-query"
   ],
   "bsc-flags": [
     "-open RescriptCore",

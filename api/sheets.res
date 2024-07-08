@@ -1,19 +1,6 @@
 exception InvalidApiKey({message: string})
 exception InvalidId({message: string})
 
-@spice
-type data = {values: array<(string, string, string)>}
-
-@spice
-type status = | @spice.as("INVALID_ARGUMENT") INVALID_ARGUMENT
-
-@spice
-type error = {
-  code: int,
-  message: string,
-  status: status,
-}
-
 @val @scope(("process", "env"))
 external spreadsheetId: option<string> = "SPREADSHEET_ID"
 @val @scope(("process", "env"))
@@ -50,10 +37,6 @@ let getSheetsData = async () => {
     },
   ) {
   | exception exn => raise(exn)
-  | res => (await res->Response.json)->data_decode
+  | res => await res->Response.json
   }
 }
-
-
-
-

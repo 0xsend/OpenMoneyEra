@@ -1,9 +1,11 @@
 module Sheets = Sheets
-
-
+module Types = Types
 
 @val @scope(("process", "env"))
 external port: option<string> = "PORT"
+
+type cors
+@module("@fastify/cors") external cors: cors = "default"
 
 module Fastify = {
   type t
@@ -13,6 +15,7 @@ module Fastify = {
     type t
     @send external code: (t, int) => unit = "code"
     @send external send: (t, JSON.t) => Promise.t<JSON.t> = "send"
+    @send external header: (t, string, string) => unit = "header"
   }
 
   @module("fastify") external make: unit => t = "default"
@@ -31,20 +34,17 @@ module Fastify = {
       handler: (request, Reply.t) => unit,
     }
   }
-  @send external register: (t, Route.t) => unit = "register"
+  @send external register: (t, 'a) => unit = "register"
 }
 
 let fastify = Fastify.make()
 
+fastify->Fastify.register(cors)
+
 let port = port->Option.flatMap(port => port->Int.fromString)->Option.getOr(3000)
 
-let tap = x => {
-  Console.log(x)
-  x
-}
-
-fastify->Fastify.get("/", async (_, _) => {
-  "{hello: world}"->JSON.parseExn->tap
+fastify->Fastify.get("/api/sheets", async (_, _) => {
+  await Sheets.getSheetsData()
 })
 
 switch await fastify->Fastify.listen({port: port}) {
