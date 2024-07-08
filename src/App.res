@@ -11,7 +11,6 @@ let fetchSheet = async _ => {
       headers: Headers.fromObject({
         "content-type": "application/json",
         "accept": "application/json",
-        "Access-Control-Allow-Origin": "*",
       }),
     },
   )
