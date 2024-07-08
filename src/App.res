@@ -73,7 +73,7 @@ let make = () => {
           })
           ->React.array
         }
-      | _ => `Unexpected error...`->React.string
+      | _ => <p className="text-xl font-semibold text-red-400 ">{`Unexpected error...`->React.string} </p>
       }}
     </div>
   </div>
