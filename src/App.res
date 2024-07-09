@@ -39,7 +39,8 @@ module TweetList = {
           <div className="flex flex-col p-2 ">
             <a
               className="text-xl font-semibold  text-color10 w-0 hover:text-color12 hover:cursor-pointer"
-              href={`https://send.app/${sendTag}`}>
+              href={`https://send.app/${sendTag}`}
+              target="_blank">
               {sendTag->React.string}
             </a>
             <div
@@ -78,6 +79,7 @@ let make = () => {
       <div className="flex flex-col items-center gap-4">
         <a
           href="https://x.com/hashtag/OpenMoneyEra"
+          target="_blank"
           className="text-3xl font-semibold text-color12 hover:cursor-pointer">
           {"Open Money Era"->React.string}
         </a>
