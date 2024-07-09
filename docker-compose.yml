@@ -1,0 +1,20 @@
+services:
+  openmoneyera:
+    image: sendapp/openmoneyera:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      tags:
+        - "sendapp/openmoneyera:${GIT_HASH:-latest}"
+      args:
+        - VITE_BASE_URL=${VITE_BASE_URL}
+    restart: always
+    deploy:
+      replicas: 2
+    ports:
+      - 3000-3001:3000
+    env_file:
+      - path: .env.template
+        required: false
+      - path: .env
+        required: false

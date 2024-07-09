@@ -1,9 +1,12 @@
 @val @scope(("import", "meta", "env"))
 external baseUrl: option<string> = "VITE_BASE_URL"
+@val @scope(("window", "location"))
+external origin: string = "origin"
 
 exception FailedToFetchSheets({message: string})
 let fetchSheet = async _ => {
-  let baseUrl = baseUrl->Option.getOr("https://localhost:3000")
+  let baseUrl = baseUrl->Option.getOr(origin)
+
   let resp = await fetch(
     `${baseUrl}/api/sheets`,
     {
@@ -30,7 +33,9 @@ module TweetList = {
       switch i {
       | x if x == items->Array.length - 1 => React.null
       | _ =>
-        <div className="flex flex-col first:border-t-0 border-t-4 border-t-color1 first:pt-0 pt-4" key={id}>
+        <div
+          className="flex flex-col first:border-t-0 border-t-4 border-t-color1 first:pt-0 pt-4"
+          key={id}>
           <div className="flex flex-col p-2 ">
             <a
               className="text-xl font-semibold  text-color10 w-0 hover:text-color12 hover:cursor-pointer"
@@ -64,8 +69,7 @@ let make = () => {
   let handleData = data => {
     switch Api.Types.data_decode(data) {
     | Error(_) => <p className="text-xl font-semibold text-red-400 "> {"Error"->React.string} </p>
-    | Ok({values}) =>
-    <TweetList items={values->Array.toReversed} />
+    | Ok({values}) => <TweetList items={values->Array.toReversed} />
     }
   }
 
