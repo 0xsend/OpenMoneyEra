@@ -1,5 +1,6 @@
 exception InvalidApiKey({message: string})
 exception InvalidId({message: string})
+exception InvalidData({message: string})
 
 @val @scope(("process", "env"))
 external spreadsheetId: option<string> = "SPREADSHEET_ID"
@@ -29,7 +30,7 @@ let getSheetsData = async () => {
     "Content-Type": "application/json",
   })->Headers.make
 
-  switch await fetch(
+  let json = switch await fetch(
     url,
     {
       method: #GET,
@@ -37,6 +38,26 @@ let getSheetsData = async () => {
     },
   ) {
   | exception exn => raise(exn)
-  | res => await res->Response.json
+  | res => await res->Response.json->catch(e => raise(e))
+  }
+  switch json->Types.Sheets.data_decode {
+  | Error(_) => raise(InvalidData({message: "Shape of data is invalid"}))
+  | Ok({values}) =>
+    open Types
+    values
+    ->Array.filterMap(v =>
+      switch v {
+      | v if v->Array.length < 3 => None
+      | _ =>
+        {
+          tweetId: ?v[0],
+          sendTag: ?v[1],
+          tweet: ?v[2],
+          name: ?v[3],
+          imageUrl: ?v[4],
+        }->Some
+      }
+    )
+    ->Array.toReversed
   }
 }

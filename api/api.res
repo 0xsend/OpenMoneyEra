@@ -25,7 +25,7 @@ module Fastify = {
   @module("fastify") external make: createOption => t = "default"
   type listenOptions = {port: int, host: string}
   @send external listen: (t, listenOptions) => Promise.t<unit> = "listen"
-  @send external get: (t, string, (request, Reply.t) => Promise.t<JSON.t>) => unit = "get"
+  @send external get: (t, string, (request, Reply.t) => Promise.t<'data>) => unit = "get"
   @send external log: t => Js.t<'a> = "log"
   module Route = {
     type t

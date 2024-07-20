@@ -1,4 +1,8 @@
 %%raw("import './index.css'")
+%%raw("import '@fontsource/dm-sans/400.css'")
+%%raw("import '@fontsource/dm-sans/700.css'")
+%%raw("import '@fontsource/dm-mono/400.css'")
+
 
 let client = ReactQuery.Provider.createClient()
 
