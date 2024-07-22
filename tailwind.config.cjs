@@ -15,6 +15,8 @@ module.exports = {
         "color10": "#40FB50",
         'color11': '#E6E6E6',
         "color12": "#FFFFFF",
+        "eth": "#E9E9E9",
+        "usdc": "#2775CA"
       },
       fontFamily: {
         'dm-sans': ['DM Sans', 'sans-serif'],

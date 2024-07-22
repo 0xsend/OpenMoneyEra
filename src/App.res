@@ -6,11 +6,7 @@ module Window = {
 
   @get external innerWidth: t => int = "innerWidth"
   module EventListener = {
-    type type_ =
-      | @as("resize") Resize
-      | @as("scroll") Scroll
-      | @as("click") Click
-      | @as("wheel") Wheel
+    type type_ = | @as("resize") Resize | @as("wheel") Wheel
     type options = {passive: bool}
 
     @private @send
@@ -52,12 +48,56 @@ let arrayToColumns = (_a: array<'a>, _cols): array<array<'a>> => {
   %raw(`[...Array(_cols).keys()].map(c => _a.filter((_, i) => i % _cols === c))`)
 }
 
+type token = {
+  name: string,
+  symbol: string,
+  address: string,
+}
+
+let ethToken = {
+  name: "Ethereum",
+  symbol: "ETH",
+  address: "eth",
+}
+let usdcToken = {
+  name: "USD Coin",
+  symbol: "USDC",
+  address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+}
+let sendToken = {
+  name: "Send",
+  symbol: "SEND",
+  address: "0x3f14920c99BEB920Afa163031c4e47a3e03B3e4A",
+}
+
+module TipPill = {
+  @react.component
+  let make = (
+    ~icon: React.element,
+    ~amount: string,
+    ~sendtag: string,
+    ~token: token,
+    ~className: string="",
+  ) => {
+    let href = `https://send.app/send/confirm?recipient=${sendtag}&amount=${amount}&sendToken=${token.address}`
+
+    <a
+      href={href}
+      target="_blank"
+      className={"hover:scale-105 transition-all rounded-md  hover:cursor-pointer px-2 py-1 flex flex-row items-center justify-around gap-1  font-mono" ++
+      " " ++
+      className}>
+      <p className="text-sm text-center leading-3"> {`+${amount}`->React.string} </p>
+      <div className="w-4 h-4 flex justify-center items-center"> {icon} </div>
+    </a>
+  }
+}
+
 module TweetList = {
   @react.component
   let make = (~columns: array<array<Api.Types.value>>) => {
     columns
     ->Array.mapWithIndex((column, i) => {
-      Console.log(column)
       <div className="flex flex-col gap-4 w-full" key={"column" ++ i->Int.toString}>
         {column
         ->Array.map(item => {
@@ -76,27 +116,49 @@ module TweetList = {
                     src={imageUrl->Option.getOr(
                       "https://raw.githubusercontent.com/0xsend/assets/main/2024/04/send-og-image-old.png",
                     )}
-                    className="w-full rounded-xl object-cover"
+                    className="w-full rounded-xl object-cover min-w-52 min-h-52"
                   />
                   <div
                     className="flex flex-col items-start justify-end gap-4 p-6 absolute bottom-0 w-full h-full bg-opacity-50 from-transparent to-color0 bg-gradient-to-b rounded-xl">
                     <h2 className="text-3xl text-color12 font-semibold ">
-                      {name->Option.getOr("Anonymous")->React.string}
+                      {name->Option.getOr("")->React.string}
                     </h2>
-                    <a
-                      className="text-xl font-semibold  text-color10 w-full hover:text-color12 hover:cursor-pointer "
-                      href={`https://send.app/${sendTag}`}
-                      target="_blank">
-                      <div className="flex items-center justify-between w-full">
-                        <p className="text-color10"> {sendTag->React.string} </p>
-                        <RightArrowIcon />
-                      </div>
-                    </a>
+                    <div className="flex items-center justify-between w-full">
+                      <a
+                        className="flex-1 text-xl font-semibold  text-color10 w-full hover:text-color12 hover:cursor-pointer "
+                        href={`https://send.app/${sendTag}`}
+                        target="_blank">
+                        <p className="text-color10"> {("/" ++ sendTag)->React.string} </p>
+                      </a>
+                    </div>
                   </div>
                 </div>
                 <div
-                  className="xl:text-lg text-md text-color11 break-words whitespace-pre-wrap pt-6 tracking-wide">
+                  className="xl:text-lg text-md text-color11 break-words whitespace-pre-wrap pt-6 tracking-wider leading-6">
                   {tweet->React.string}
+                </div>
+                <div className="w-full flex items-center justify-end gap-2 flex-1 pt-4">
+                  <TipPill
+                    icon={<ETHIcon />}
+                    amount=".001"
+                    sendtag={sendTag}
+                    token=ethToken
+                    className="bg-eth"
+                  />
+                  <TipPill
+                    icon={<USDCIcon />}
+                    amount="1.00"
+                    sendtag={sendTag}
+                    token=usdcToken
+                    className="bg-usdc text-color12"
+                  />
+                  <TipPill
+                    icon={<SENDIcon />}
+                    amount="1000"
+                    sendtag={sendTag}
+                    token=sendToken
+                    className="bg-color10"
+                  />
                 </div>
               </div>
             </div>
@@ -141,9 +203,9 @@ let make = () => {
 
   React.useEffect1(() => {
     switch vw {
-    | vw if vw < 640 => setNumColumns(_ => 1)
-    | vw if vw < 1024 => setNumColumns(_ => 2)
-    | vw if vw >= 1024 => setNumColumns(_ => 3)
+    | vw if vw < 768 => setNumColumns(_ => 1)
+    | vw if vw < 1280 => setNumColumns(_ => 2)
+    | vw if vw >= 1280 => setNumColumns(_ => 3)
     | _ => ()
     }
     None
@@ -164,7 +226,7 @@ let make = () => {
         <a
           href="https://x.com/hashtag/OpenMoneyEra"
           target="_blank"
-          className="text-3xl font-bold text-color12 hover:cursor-pointer uppercase">
+          className="text-4xl font-bold text-color12 hover:cursor-pointer uppercase">
           {"Open Money Era"->React.string}
         </a>
         <p className="text-xl  text-color3 ">
