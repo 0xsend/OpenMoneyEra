@@ -98,7 +98,7 @@ module TweetList = {
   let make = (~columns: array<array<Api.Types.value>>) => {
     columns
     ->Array.mapWithIndex((column, i) => {
-      <div className="flex flex-col gap-4 w-full" key={"column" ++ i->Int.toString}>
+      <div className="flex flex-col gap-14 w-full" key={"column" ++ i->Int.toString}>
         {column
         ->Array.map(item => {
           switch item {
@@ -139,18 +139,18 @@ module TweetList = {
                 </div>
                 <div className="w-full flex items-center justify-end gap-2 flex-1 pt-4">
                   <TipPill
-                    icon={<ETHIcon />}
-                    amount=".001"
-                    sendtag={sendTag}
-                    token=ethToken
-                    className="bg-eth"
-                  />
-                  <TipPill
                     icon={<USDCIcon />}
                     amount="1.00"
                     sendtag={sendTag}
                     token=usdcToken
                     className="bg-usdc text-color12"
+                  />
+                  <TipPill
+                    icon={<ETHIcon />}
+                    amount=".001"
+                    sendtag={sendTag}
+                    token=ethToken
+                    className="bg-eth"
                   />
                   <TipPill
                     icon={<SENDIcon />}
@@ -221,20 +221,35 @@ let make = () => {
   }, (queryResult.data, numColumns))
 
   <div className="xl:p-20 md:p-8 bg-color0 h-full flex flex-col ">
-    <header className="flex justify-between xl:p-0 xl:pb-10 p-6 pb-10 ">
+    <header className="flex flex-col md:flex-row justify-between xl:p-0 xl:pb-10 p-6 md:pb-10 items-center ">
       <div className="flex flex-col gap-4">
-        <a
-          href="https://x.com/hashtag/OpenMoneyEra"
-          target="_blank"
-          className="text-4xl font-bold text-color12 hover:cursor-pointer uppercase">
+        <h1 className="text-4xl font-bold text-color12 uppercase">
           {"Open Money Era"->React.string}
-        </a>
-        <p className="text-xl  text-color3 ">
-          {"Send the #OpenMoneyEra on Twitter and receive Send tips"->React.string}
-        </p>
+        </h1>
+        <div className="text-xl  text-color3">
+          {"Send the"->React.string}
+          <a
+            href="https://x.com/hashtag/OpenMoneyEra"
+            target="_blank"
+            className="text-xl  text-color10">
+            {" #OpenMoneyEra "->React.string}
+          </a>
+          {"hashtag on X and receive $USDC, $ETH, and $SEND Tips"->React.string}
+        </div>
+      </div>
+      <div className="flex flex-row pt-4 md:pt-0">
+        <div className="flex w-20 h-20 items-center justify-center mr-[-1rem] shadow-lg z-50">
+          <USDCToken />
+        </div>
+        <div className="flex w-20 h-20 items-center justify-center mr-[-1rem] shadow-lg z-40">
+          <ETHToken/>
+        </div>
+        <div className="flex w-20 h-20 items-center justify-center">
+          <SENDToken />
+        </div>
       </div>
     </header>
-    <div className="flex flex-row gap-4 py-6 h-full">
+    <div className="flex flex-row gap-14 py-6 h-full">
       {switch (queryResult, columns) {
       | ({isLoading: true}, _) =>
         <p className="text-xl font-semibold text-color12 "> {"Loading..."->React.string} </p>
