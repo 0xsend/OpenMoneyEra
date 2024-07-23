@@ -221,11 +221,27 @@ let make = () => {
   }, (queryResult.data, numColumns))
 
   <div className="xl:p-20 md:p-8 bg-color0 h-full flex flex-col ">
-    <header className="flex flex-col md:flex-row justify-between xl:p-0 xl:pb-10 p-6 md:pb-10 items-center ">
+    <header
+      className="flex flex-col md:flex-row justify-between xl:p-0 xl:pb-10 p-6 md:pb-10 items-center ">
       <div className="flex flex-col gap-4">
-        <h1 className="text-4xl font-bold text-color12 uppercase">
-          {"Open Money Era"->React.string}
-        </h1>
+        <div className="flex flex-row justify-between items-center">
+          <h1 className="text-3xl lg:text-4xl font-bold text-color12 uppercase">
+            {"Open Money Era"->React.string}
+          </h1>
+          <div className="flex flex-row ">
+            <div
+              className="flex w-20 h-20 items-center justify-center mr-[-1rem] shadow-lg z-50">
+              <USDCToken />
+            </div>
+            <div
+              className="flex w-20 h-20 items-center justify-center mr-[-1rem] shadow-lg z-40">
+              <ETHToken />
+            </div>
+            <div className="flex w-20 h-20 items-center justify-center">
+              <SENDToken />
+            </div>
+          </div>
+        </div>
         <div className="text-xl  text-color3">
           {"Send the"->React.string}
           <a
@@ -235,17 +251,6 @@ let make = () => {
             {" #OpenMoneyEra "->React.string}
           </a>
           {"hashtag on X and receive $USDC, $ETH, and $SEND Tips"->React.string}
-        </div>
-      </div>
-      <div className="flex flex-row pt-4 md:pt-0">
-        <div className="flex w-20 h-20 items-center justify-center mr-[-1rem] shadow-lg z-50">
-          <USDCToken />
-        </div>
-        <div className="flex w-20 h-20 items-center justify-center mr-[-1rem] shadow-lg z-40">
-          <ETHToken/>
-        </div>
-        <div className="flex w-20 h-20 items-center justify-center">
-          <SENDToken />
         </div>
       </div>
     </header>
