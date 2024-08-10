@@ -11,14 +11,14 @@ module Window: {
     @private @send external remove: (Dom.window, type_, 'a => unit) => unit = "removeEventListener"
   }
   let addEventListener: (
-  Dom.window,
-  EventListener.type_,
-  'a => unit,
-  ~options: EventListener.options=?,
-) => unit
+    Dom.window,
+    EventListener.type_,
+    'a => unit,
+    ~options: EventListener.options=?,
+  ) => unit
   let removeEventListener: (Dom.window, EventListener.type_, 'a => unit) => unit
 }
-type exn +=  FailedToFetchSheets({message: string})
+type exn += FailedToFetchSheets({message: string})
 let fetchSheet: 'a => promise<Js.Array.t<Api.Types.value>>
 let arrayToColumns: (array<'a>, 'b) => array<array<'a>>
 type token = {name: string, symbol: string, address: string}
@@ -28,12 +28,13 @@ let sendToken: token
 module TipPill: {
   @react.component
   let make: (
-  ~icon: React.element,
-  ~amount: string,
-  ~sendtag: string,
-  ~token: token,
-  ~className: string=?,
-) => Jsx.element
+    ~icon: React.element,
+    ~amount: string,
+    ~displayAmount: string=?,
+    ~sendtag: string,
+    ~token: token,
+    ~className: string=?,
+  ) => Jsx.element
 }
 module TweetList: {
   @react.component

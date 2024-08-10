@@ -75,6 +75,7 @@ module TipPill = {
   let make = (
     ~icon: React.element,
     ~amount: string,
+    ~displayAmount: option<string>=?,
     ~sendtag: string,
     ~token: token,
     ~className: string="",
@@ -87,7 +88,9 @@ module TipPill = {
       className={"hover:scale-105 transition-all rounded-md  hover:cursor-pointer px-2 py-1 flex flex-row items-center justify-around gap-1  font-mono" ++
       " " ++
       className}>
-      <p className="text-sm text-center leading-3"> {`+${amount}`->React.string} </p>
+      <p className="text-sm text-center leading-3">
+        {`+${displayAmount->Option.getOr(amount)}`->React.string}
+      </p>
       <div className="w-4 h-4 flex justify-center items-center"> {icon} </div>
     </a>
   }
@@ -140,7 +143,7 @@ module TweetList = {
                 <div className="w-full flex items-center justify-end gap-2 flex-1 pt-4">
                   <TipPill
                     icon={<USDCIcon />}
-                    amount="1.00"
+                    amount="3.00"
                     sendtag={sendTag}
                     token=usdcToken
                     className="bg-usdc text-color12"
@@ -154,7 +157,8 @@ module TweetList = {
                   />
                   <TipPill
                     icon={<SENDIcon />}
-                    amount="1000"
+                    amount="50000"
+                    displayAmount="50k"
                     sendtag={sendTag}
                     token=sendToken
                     className="bg-color10"
@@ -223,21 +227,21 @@ let make = () => {
   <div className="xl:p-20 md:p-8 bg-color0 h-full flex flex-col ">
     <header
       className="flex flex-col md:flex-row justify-between xl:p-0 xl:pb-10 p-6 md:pb-10 items-center ">
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 w-full">
         <div className="flex flex-row justify-between items-center">
-          <h1 className="text-3xl lg:text-4xl font-bold text-color12 uppercase">
+          <h1 className="text-2xl lg:text-4xl font-bold text-color12 uppercase">
             {"Open Money Era"->React.string}
           </h1>
           <div className="flex flex-row ">
             <div
-              className="flex w-20 h-20 items-center justify-center mr-[-1rem] shadow-lg z-50">
+              className="flex w-11 h-11 md:w-20 md:h-20 items-center justify-center mr-[-1rem] z-50">
               <USDCToken />
             </div>
             <div
-              className="flex w-20 h-20 items-center justify-center mr-[-1rem] shadow-lg z-40">
+              className="flex w-11 h-11 md:w-20 md:h-20 items-center justify-center mr-[-1rem] z-40">
               <ETHToken />
             </div>
-            <div className="flex w-20 h-20 items-center justify-center">
+            <div className="flex w-11 h-11 md:w-20 md:h-20 items-center justify-center">
               <SENDToken />
             </div>
           </div>
@@ -256,8 +260,7 @@ let make = () => {
     </header>
     <div className="flex flex-row gap-14 py-6 h-full">
       {switch (queryResult, columns) {
-      | ({isLoading: true}, _) =>
-        <p className="text-xl font-semibold text-color12 "> {"Loading..."->React.string} </p>
+      | ({isLoading: true}, _) => <PendingIndicatorBar pending=true />
       | ({error, isError: true}, _) =>
         <>
           <p className="text-xl font-semibold text-red-400 "> {"Error"->React.string} </p>
@@ -269,11 +272,8 @@ let make = () => {
             ->React.string}
           </p>
         </>
+      | ({isLoading: false, isError: false}, None) => React.null
       | ({isLoading: false, isError: false}, Some(columns)) => <TweetList columns />
-      | _ =>
-        <p className="text-xl font-semibold text-red-400 ">
-          {`Unexpected error...`->React.string}
-        </p>
       }}
     </div>
   </div>
