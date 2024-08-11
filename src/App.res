@@ -157,8 +157,8 @@ module TweetList = {
                   />
                   <TipPill
                     icon={<SENDIcon />}
-                    amount="50000"
-                    displayAmount="50k"
+                    amount="25000"
+                    displayAmount="25k"
                     sendtag={sendTag}
                     token=sendToken
                     className="bg-color10"
