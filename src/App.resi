@@ -21,7 +21,7 @@ module Window: {
 type exn += FailedToFetchSheets({message: string})
 let fetchSheet: 'a => promise<Js.Array.t<Api.Types.value>>
 let arrayToColumns: (array<'a>, 'b) => array<array<'a>>
-type token = {name: string, symbol: string, address: string}
+type token = {name: string, symbol: string, address: string, decimals: float}
 let ethToken: token
 let usdcToken: token
 let sendToken: token
@@ -29,7 +29,7 @@ module TipPill: {
   @react.component
   let make: (
     ~icon: React.element,
-    ~amount: string,
+    ~amount: float,
     ~displayAmount: string=?,
     ~sendtag: string,
     ~token: token,
