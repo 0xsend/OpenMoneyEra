@@ -52,35 +52,42 @@ type token = {
   name: string,
   symbol: string,
   address: string,
+  decimals: float,
 }
 
 let ethToken = {
   name: "Ethereum",
   symbol: "ETH",
   address: "eth",
+  decimals: 18.,
 }
 let usdcToken = {
   name: "USD Coin",
   symbol: "USDC",
   address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+  decimals: 6.,
 }
 let sendToken = {
   name: "Send",
   symbol: "SEND",
   address: "0x3f14920c99BEB920Afa163031c4e47a3e03B3e4A",
+  decimals: 0.,
 }
 
 module TipPill = {
   @react.component
   let make = (
     ~icon: React.element,
-    ~amount: string,
+    ~amount: float,
     ~displayAmount: option<string>=?,
     ~sendtag: string,
     ~token: token,
     ~className: string="",
   ) => {
-    let href = `https://send.app/send/confirm?recipient=${sendtag}&amount=${amount}&sendToken=${token.address}`
+    let amount = amount *. 10. ** token.decimals
+    let urlAmount = amount->Float.toInt->Int.toString
+
+    let href = `https://send.app/send/confirm?recipient=${sendtag}&amount=${urlAmount}&sendToken=${token.address}`
 
     <a
       href={href}
@@ -89,7 +96,7 @@ module TipPill = {
       " " ++
       className}>
       <p className="text-sm text-center leading-3">
-        {`+${displayAmount->Option.getOr(amount)}`->React.string}
+        {`+${displayAmount->Option.getOr(amount->Float.toString)}`->React.string}
       </p>
       <div className="w-4 h-4 flex justify-center items-center"> {icon} </div>
     </a>
@@ -143,22 +150,16 @@ module TweetList = {
                 <div className="w-full flex items-center justify-end gap-2 flex-1 pt-4">
                   <TipPill
                     icon={<USDCIcon />}
-                    amount="3.00"
+                    amount={1.}
+                    displayAmount={"1.00"}
                     sendtag={sendTag}
                     token=usdcToken
                     className="bg-usdc text-color12"
                   />
                   <TipPill
-                    icon={<ETHIcon />}
-                    amount=".001"
-                    sendtag={sendTag}
-                    token=ethToken
-                    className="bg-eth"
-                  />
-                  <TipPill
                     icon={<SENDIcon />}
-                    amount="25000"
-                    displayAmount="25k"
+                    amount={10000.}
+                    displayAmount="10k"
                     sendtag={sendTag}
                     token=sendToken
                     className="bg-color10"
