@@ -70,8 +70,8 @@ let usdcToken = {
 let sendToken = {
   name: "Send",
   symbol: "SEND",
-  address: "0x3f14920c99BEB920Afa163031c4e47a3e03B3e4A",
-  decimals: 0.,
+  address: "0xEab49138BA2Ea6dd776220fE26b7b8E446638956",
+  decimals: 18.,
 }
 
 module TipPill = {
@@ -158,7 +158,7 @@ module TweetList = {
                   />
                   <TipPill
                     icon={<SENDIcon />}
-                    amount={10000.}
+                    amount={100.}
                     displayAmount="10k"
                     sendtag={sendTag}
                     token=sendToken
