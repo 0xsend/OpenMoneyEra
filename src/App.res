@@ -52,42 +52,53 @@ type token = {
   name: string,
   symbol: string,
   address: string,
-  decimals: float,
+  decimals: bigint,
 }
 
 let ethToken = {
   name: "Ethereum",
   symbol: "ETH",
   address: "eth",
-  decimals: 18.,
+  decimals: 18n,
 }
 let usdcToken = {
   name: "USD Coin",
   symbol: "USDC",
   address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-  decimals: 6.,
+  decimals: 6n,
 }
 let sendToken = {
   name: "Send",
   symbol: "SEND",
   address: "0xEab49138BA2Ea6dd776220fE26b7b8E446638956",
-  decimals: 18.,
+  decimals: 18n,
+}
+
+let usdcTip = {
+  open! BigInt
+  1n * 10n ** (usdcToken.decimals - 1n)
+}
+let sendTip = {
+  open! BigInt
+  100n * 10n ** sendToken.decimals
 }
 
 module TipPill = {
   @react.component
   let make = (
     ~icon: React.element,
-    ~amount: float,
+    ~amount: bigint,
     ~displayAmount: option<string>=?,
-    ~sendtag: string,
+    ~sendTag: string,
     ~token: token,
     ~className: string="",
   ) => {
-    let amount = amount *. 10. ** token.decimals
-    let urlAmount = amount->Float.toInt->Int.toString
+    let formattedAmount = {
+      open! BigInt
+      (amount / token.decimals * 10n)->toString
+    }
 
-    let href = `https://send.app/send/confirm?recipient=${sendtag}&amount=${urlAmount}&sendToken=${token.address}`
+    let href = `https://send.app/send/confirm?recipient=${sendTag}&amount=${amount->BigInt.toString}&sendToken=${token.address}`
 
     <a
       href={href}
@@ -96,7 +107,7 @@ module TipPill = {
       " " ++
       className}>
       <p className="text-sm text-center leading-3">
-        {`+${displayAmount->Option.getOr(amount->Float.toString)}`->React.string}
+        {`+${displayAmount->Option.getOr(formattedAmount)}`->React.string}
       </p>
       <div className="w-4 h-4 flex justify-center items-center"> {icon} </div>
     </a>
@@ -150,17 +161,17 @@ module TweetList = {
                 <div className="w-full flex items-center justify-end gap-2 flex-1 pt-4">
                   <TipPill
                     icon={<USDCIcon />}
-                    amount={1.}
-                    displayAmount={"1.00"}
-                    sendtag={sendTag}
+                    amount={usdcTip}
+                    displayAmount={"0.10"}
+                    sendTag
                     token=usdcToken
                     className="bg-usdc text-color12"
                   />
                   <TipPill
                     icon={<SENDIcon />}
-                    amount={100.}
-                    displayAmount="10k"
-                    sendtag={sendTag}
+                    amount={sendTip}
+                    displayAmount="100"
+                    sendTag
                     token=sendToken
                     className="bg-color10"
                   />
